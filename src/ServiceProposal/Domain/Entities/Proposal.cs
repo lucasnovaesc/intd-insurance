@@ -44,6 +44,8 @@ namespace Domain.Entities
             }
         }
         public long ProposalNumber { get; set; }
+
+        public Product Product { get; set; }
         public Guid ProductId
         {
             get => _productId; set

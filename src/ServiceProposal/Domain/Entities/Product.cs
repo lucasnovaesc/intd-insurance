@@ -10,13 +10,13 @@ namespace Domain.Entities
         }
         public Product(Guid productId, string name, string description, Guid productTypeId, decimal price, DateTime dateCreation, DateTime dateModification)
         {
-            ProductId = productId;
-            Name = name;
-            Description = description;
-            ProductTypeId = productTypeId;
-            Price = price;
-            DateCreation = dateCreation;
-            DateModification = dateModification;
+            this.ProductId = productId;
+            this.Name = name;
+            this.Description = description;
+            this.ProductTypeId = productTypeId;
+            this.Price = price;
+            this.DateCreation = dateCreation;
+            this.DateModification = dateModification;
         }
 
         private Guid _productId;
@@ -29,7 +29,7 @@ namespace Domain.Entities
         
         public Guid ProductId
         {
-            get => _productId; set
+            get => this._productId; set
             {
                 if (value.Equals(Guid.Empty))
                 {
@@ -37,13 +37,13 @@ namespace Domain.Entities
                 }
                 else
                 {
-                    _productId = value;
+                    this._productId = value;
                 }
             }
         }
         public string Name
         {
-            get => _name; set
+            get => this._name; set
             {
                 if (string.IsNullOrEmpty(value))
                 {
@@ -51,13 +51,13 @@ namespace Domain.Entities
                 }
                 else
                 {
-                    _name = value;
+                    this._name = value;
                 }
             }
         }
         public string Description
         {
-            get => _description; set
+            get => this._description; set
             {
                 if (string.IsNullOrEmpty(value))
                 {
@@ -65,14 +65,14 @@ namespace Domain.Entities
                 }
                 else
                 {
-                    _description = value;
+                    this._description = value;
                 }
             }
         }
         public ProductType ProductType { get; set; }
         public Guid ProductTypeId
         {
-            get => _productTypeId; set
+            get => this._productTypeId; set
             {
                 if (value.Equals(Guid.Empty))
                 {
@@ -80,13 +80,13 @@ namespace Domain.Entities
                 }
                 else
                 {
-                    _productTypeId = value;
+                    this._productTypeId = value;
                 }
             }
         }
         public decimal Price
         {
-            get => _price; set
+            get => this._price; set
             {
                 if (value < PRICE_MIN_VALUE || value > PRICE_MAX_VALUE)
                 {
@@ -94,7 +94,7 @@ namespace Domain.Entities
                 }
                 else
                 {
-                    _price = value;
+                    this._price = value;
                 }
             }
         }
