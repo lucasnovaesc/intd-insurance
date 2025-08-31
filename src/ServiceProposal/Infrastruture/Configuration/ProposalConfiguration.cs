@@ -10,7 +10,7 @@ namespace Infrastruture.Configuration
     {
         public void Configure(EntityTypeBuilder<Proposal> builder)
         {
-            builder.ToTable("ProductType");
+            builder.ToTable("Proposal");
             builder.HasKey(c => c.ProposalId);
 
             builder.HasIndex(c => c.ProposalNumber).IsUnique();

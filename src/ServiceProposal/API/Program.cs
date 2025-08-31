@@ -1,3 +1,4 @@
+using Infrastruture;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateSlimBuilder(args);
@@ -6,7 +7,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
-
+builder.Services.AddDbContext<ServiceProposalContext>();
 var app = builder.Build();
 
 var sampleTodos = new Todo[] {
