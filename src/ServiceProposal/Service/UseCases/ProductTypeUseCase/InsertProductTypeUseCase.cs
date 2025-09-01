@@ -19,7 +19,7 @@ namespace Service.UseCases.ProductTypeUseCase
             this._productTypeFactory = productTypeFactory;
         }
 
-        public async Task<bool> Insert(RequestInsertrProductTypeDTO requestInsertrProductTypeDTO)
+        public async Task<bool> Insert(RequestInsertProductTypeDTO requestInsertrProductTypeDTO)
         {
             try
             {
