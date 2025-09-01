@@ -2,14 +2,14 @@
 
 namespace Service.DataTransferObjects.ProductTypeDTO.Request
 {
-    public class RequestInsertroductTypeDTO
+    public class RequestInsertrProductTypeDTO
     {
-        public RequestInsertroductTypeDTO()
+        public RequestInsertrProductTypeDTO()
         {
             
         }
 
-        public RequestInsertroductTypeDTO(string name, string description)
+        public RequestInsertrProductTypeDTO(string name, string description)
         {
             this.Name = name;
             this.Description = description;
