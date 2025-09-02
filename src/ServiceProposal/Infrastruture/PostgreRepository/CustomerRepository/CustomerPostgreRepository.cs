@@ -120,9 +120,9 @@ namespace Infrastruture.PostgreRepository.CustomerRepository
                 this._serviceProposalContext.Entry(customer).State = EntityState.Detached;
 
                 if (dbEx.InnerException is PostgresException pgEx)
-                    throw new InsertEntityException($"Error: Can not Update {pgEx.Detail}");
+                    throw new UpdateEntityException($"Error: Can not Update {pgEx.Detail}");
 
-                throw new InsertEntityException(dbEx.Message);
+                throw new UpdateEntityException(dbEx.Message);
             }
         }
     }
