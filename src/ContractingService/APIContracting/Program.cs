@@ -1,3 +1,10 @@
+using Domain.Factories;
+using Domain.Repository;
+using Infrastructure;
+using Infrastructure.PostgreRepositories.ServiceContractingRepository;
+using Microsoft.OpenApi.Models;
+using Service.UseCases.ServiceContractingUseCase;
+using Service.UseCases.ServiceContractingUseCase.Interfaces;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateSlimBuilder(args);
@@ -7,22 +14,39 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
 
+//Service Contracting Dependence Injection
+builder.Services.AddDbContext<ServiceContractingContext>();
+builder.Services.AddScoped<ServiceContractingFactory>();
+builder.Services.AddScoped<IServiceContractingRepository, ServiceContractingPostgreRepository>();
+builder.Services.AddScoped<IInsertServiceContractingUseCase, InsertServiceContractingUseCase>();
+builder.Services.AddScoped<IUpdateServiceContractingUseCase, UpdateServiceContractingUseCase>();
+builder.Services.AddScoped<IDeleteServiceContractingUseCase, DeleteServiceContractingUseCase>();
+builder.Services.AddScoped<IReadServiceContractingUseCase, ReadServiceContractingUseCase>();
+
+// Adiciona serviços do Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "INTD API", Version = "v1" });
+});
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
-var sampleTodos = new Todo[] {
-    new(1, "Walk the dog"),
-    new(2, "Do the dishes", DateOnly.FromDateTime(DateTime.Now)),
-    new(3, "Do the laundry", DateOnly.FromDateTime(DateTime.Now.AddDays(1))),
-    new(4, "Clean the bathroom"),
-    new(5, "Clean the car", DateOnly.FromDateTime(DateTime.Now.AddDays(2)))
-};
+// Ativa middleware do Swagger só no Development
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "INT.Service API V1");
+        c.RoutePrefix = string.Empty; // Swagger abre direto na raiz "/"
+    });
+}
 
-var todosApi = app.MapGroup("/todos");
-todosApi.MapGet("/", () => sampleTodos);
-todosApi.MapGet("/{id}", (int id) =>
-    sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
-        ? Results.Ok(todo)
-        : Results.NotFound());
+app.UseHttpsRedirection();
+//app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
 

@@ -19,13 +19,13 @@ namespace Domain.Entities
             this.DateStartContract = dateStartContract;
         }
 
-        private Guid _serviceContracting;
+        private Guid _serviceContractingId;
         private Guid _proposalId;
         private Guid _customerId;
 
         public Guid ServiceContractingId
         {
-            get => _customerId; set
+            get => _serviceContractingId; set
             {
                 if (value.Equals(Guid.Empty))
                 {
@@ -33,13 +33,13 @@ namespace Domain.Entities
                 }
                 else
                 {
-                    this._customerId = value;
+                    this._serviceContractingId = value;
                 }
             }
         }
         public Guid ProposalId
         {
-            get => _customerId; set
+            get => _proposalId; set
             {
                 if (value.Equals(Guid.Empty))
                 {
@@ -47,7 +47,7 @@ namespace Domain.Entities
                 }
                 else
                 {
-                    this._customerId = value;
+                    this._proposalId = value;
                 }
             }
         }
