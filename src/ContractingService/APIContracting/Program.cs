@@ -2,9 +2,11 @@ using Domain.Factories;
 using Domain.Repository;
 using Infrastructure;
 using Infrastructure.PostgreRepositories.ServiceContractingRepository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Service.UseCases.ServiceContractingUseCase;
 using Service.UseCases.ServiceContractingUseCase.Interfaces;
+using System;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateSlimBuilder(args);
@@ -22,6 +24,12 @@ builder.Services.AddScoped<IInsertServiceContractingUseCase, InsertServiceContra
 builder.Services.AddScoped<IUpdateServiceContractingUseCase, UpdateServiceContractingUseCase>();
 builder.Services.AddScoped<IDeleteServiceContractingUseCase, DeleteServiceContractingUseCase>();
 builder.Services.AddScoped<IReadServiceContractingUseCase, ReadServiceContractingUseCase>();
+
+//var connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
+
+//// Injetar DbContext
+//builder.Services.AddDbContext<ServiceContractingContext>(options =>
+//    options.UseNpgsql(connectionString));
 
 // Adiciona serviços do Swagger
 builder.Services.AddEndpointsApiExplorer();

@@ -3,6 +3,7 @@
 using Domain.Entities;
 using Infrastructure.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure
 {
@@ -10,7 +11,17 @@ namespace Infrastructure
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Server=localhost:5432;Database=servicecontracting;User Id=postgres;Password=12345;Include Error Detail=true;");
+            string caminhoConfig = AppContext.BaseDirectory;
+
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+                .SetBasePath(caminhoConfig)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+            IConfigurationRoot configuration = builder.Build();
+
+            string connectionString = configuration.GetConnectionString("PostgresConnection");
+
+            optionsBuilder.UseNpgsql(connectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

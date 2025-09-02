@@ -5,6 +5,7 @@ using Infrastruture.PostgreRepository.CustomerRepository;
 using Infrastruture.PostgreRepository.ProductRepository;
 using Infrastruture.PostgreRepository.ProductTypeRepository;
 using Infrastruture.PostgreRepository.ProposalRepository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Service.UseCases.CustomerUseCase;
 using Service.UseCases.CustomerUseCase.Interfaces;
@@ -23,6 +24,12 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
 builder.Services.AddDbContext<ServiceProposalContext>();
+
+//var connectionString = builder.Configuration.GetConnectionString("ServiceProposalDb");
+
+//// Injetar DbContext
+//builder.Services.AddDbContext<ServiceProposalContext>(options =>
+//    options.UseNpgsql(connectionString));
 //product Dependence Injection
 builder.Services.AddScoped<ProductFactory>();
 builder.Services.AddScoped<IProductRepository, ProductPostgreRepository>();
@@ -64,20 +71,6 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddControllers();
 var app = builder.Build();
 
-//var sampleTodos = new Todo[] {
-//    new(1, "Walk the dog"),
-//    new(2, "Do the dishes", DateOnly.FromDateTime(DateTime.Now)),
-//    new(3, "Do the laundry", DateOnly.FromDateTime(DateTime.Now.AddDays(1))),
-//    new(4, "Clean the bathroom"),
-//    new(5, "Clean the car", DateOnly.FromDateTime(DateTime.Now.AddDays(2)))
-//};
-
-//var todosApi = app.MapGroup("/todos");
-//todosApi.MapGet("/", () => sampleTodos);
-//todosApi.MapGet("/{id}", (int id) =>
-//    sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
-//        ? Results.Ok(todo)
-//        : Results.NotFound());
 
 
 // Ativa middleware do Swagger só no Development
