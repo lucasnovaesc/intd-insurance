@@ -62,7 +62,7 @@ builder.Services.AddScoped<IUpdateProposalUseCase, UpdateProposalUseCase>();
 builder.Services.AddScoped<IDeleteProposalUseCase, DeleteProposalUseCase>();
 builder.Services.AddScoped<IReadProposalUseCase, ReadProposalUseCase>();
 
-// Adiciona serviços do Swagger
+// Adiciona serviï¿½os do Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -71,18 +71,20 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddControllers();
 var app = builder.Build();
 
-
-
-// Ativa middleware do Swagger só no Development
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "INT.Service API V1");
-        c.RoutePrefix = string.Empty; // Swagger abre direto na raiz "/"
-    });
+    var db = scope.ServiceProvider.GetRequiredService<ServiceProposalContext>();
+    db.Database.Migrate(); // aplica migrations automaticamente
 }
+
+
+// Ativa middleware do Swagger sï¿½ no Development
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "INT.Service API V1");
+    c.RoutePrefix = string.Empty;
+});
 
 app.UseHttpsRedirection();
 //app.UseAuthorization();

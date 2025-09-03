@@ -31,7 +31,7 @@ builder.Services.AddScoped<IReadServiceContractingUseCase, ReadServiceContractin
 //builder.Services.AddDbContext<ServiceContractingContext>(options =>
 //    options.UseNpgsql(connectionString));
 
-// Adiciona serviços do Swagger
+// Adiciona serviï¿½os do Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -41,16 +41,15 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-// Ativa middleware do Swagger só no Development
-if (app.Environment.IsDevelopment())
+// Ativa middleware do Swagger sï¿½ no Development
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "INT.Service API V1");
-        c.RoutePrefix = string.Empty; // Swagger abre direto na raiz "/"
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "INT.Service API V1");
+    c.RoutePrefix = string.Empty; // Swagger abre direto na raiz "/"
+});
+
 
 app.UseHttpsRedirection();
 //app.UseAuthorization();
