@@ -2,8 +2,12 @@ using Domain.Factories;
 using Domain.Repository;
 using Infrastructure;
 using Infrastructure.PostgreRepositories.ServiceContractingRepository;
+using Infrastructure.Resources.RabbitMq;
+using Infrastructure.Resources.RabbitMq.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Service.UseCases.ProposalUseCase.Interfaces;
+using Service.UseCases.ProposalUseCase;
 using Service.UseCases.ServiceContractingUseCase;
 using Service.UseCases.ServiceContractingUseCase.Interfaces;
 using System;
@@ -24,7 +28,11 @@ builder.Services.AddScoped<IInsertServiceContractingUseCase, InsertServiceContra
 builder.Services.AddScoped<IUpdateServiceContractingUseCase, UpdateServiceContractingUseCase>();
 builder.Services.AddScoped<IDeleteServiceContractingUseCase, DeleteServiceContractingUseCase>();
 builder.Services.AddScoped<IReadServiceContractingUseCase, ReadServiceContractingUseCase>();
+builder.Services.AddHostedService<RabbitMqBackgroundConsumer>();
+builder.Services.AddSingleton<IRabbitMqSubscriber, RabbitMqSubscriber>();
 
+builder.Services.AddScoped<IProposalProcessorService, ProposalProcessorService>();
+builder.Services.AddHostedService<RabbitMqBackgroundConsumer>();
 //var connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
 
 //// Injetar DbContext
@@ -38,7 +46,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "INTD API", Version = "v1" });
 });
 builder.Services.AddControllers();
-
+builder.Services.AddScoped<IProposalProcessorService, ProposalProcessorService>();
 var app = builder.Build();
 
 // Ativa middleware do Swagger s� no Development

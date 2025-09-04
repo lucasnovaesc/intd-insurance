@@ -5,6 +5,8 @@ using Infrastruture.PostgreRepository.CustomerRepository;
 using Infrastruture.PostgreRepository.ProductRepository;
 using Infrastruture.PostgreRepository.ProductTypeRepository;
 using Infrastruture.PostgreRepository.ProposalRepository;
+using Infrastruture.Resources.RabbitMQ;
+using Infrastruture.Resources.RabbitMQ.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Service.UseCases.CustomerUseCase;
@@ -31,6 +33,7 @@ builder.Services.AddDbContext<ServiceProposalContext>();
 //builder.Services.AddDbContext<ServiceProposalContext>(options =>
 //    options.UseNpgsql(connectionString));
 //product Dependence Injection
+builder.Services.AddSingleton<IRabbitMQClient, RabbitMQClient>();
 builder.Services.AddScoped<ProductFactory>();
 builder.Services.AddScoped<IProductRepository, ProductPostgreRepository>();
 builder.Services.AddScoped<IInsertProductUseCase, InsertProductUseCase>();
