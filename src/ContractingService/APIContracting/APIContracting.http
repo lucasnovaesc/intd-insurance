@@ -1,0 +1,11 @@
+@APIContracting_HostAddress = http://localhost:5289
+
+GET {{APIContracting_HostAddress}}/todos/
+Accept: application/json
+
+###
+
+GET {{APIContracting_HostAddress}}/todos/1
+Accept: application/json
+
+###
