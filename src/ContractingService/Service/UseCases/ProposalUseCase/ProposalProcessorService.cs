@@ -7,7 +7,7 @@ namespace Service.UseCases.ProposalUseCase
 {
     public class ProposalProcessorService : IProposalProcessorService
     {
-        public async Task ProcessMessageAsync(string message)
+        public async Task<string> ProcessMessageAsync(string message)
         {
             var proposal = JsonSerializer.Deserialize<object>(message);
 
@@ -15,6 +15,7 @@ namespace Service.UseCases.ProposalUseCase
 
             // Aqui você poderia salvar no banco, enviar notificação, etc.
             await Task.CompletedTask;
+            return proposal.ToString();
         }
     }
 }

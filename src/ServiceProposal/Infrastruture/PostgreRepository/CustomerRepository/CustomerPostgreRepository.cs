@@ -3,6 +3,7 @@
 using Domain.Entities;
 using Domain.Exceptions;
 using Domain.Repositories;
+using Infrastruture.Resources.RabbitMQ.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -12,7 +13,12 @@ namespace Infrastruture.PostgreRepository.CustomerRepository
     {
         private readonly ServiceProposalContext _serviceProposalContext;
         private int _codeReturnDatabase = 0;
-        public CustomerPostgreRepository(ServiceProposalContext ctx) => this._serviceProposalContext = ctx;
+        private readonly IRabbitMQClient _rabbitMQClient;
+        public CustomerPostgreRepository(ServiceProposalContext ctx, IRabbitMQClient rabbitMQClient)
+        {
+            this._serviceProposalContext = ctx;
+            _rabbitMQClient = rabbitMQClient;
+        }
 
         public async Task<bool> Delete(Guid customerId)
         {
@@ -84,6 +90,7 @@ namespace Infrastruture.PostgreRepository.CustomerRepository
                     throw new InsertEntityException($"Error: Can not Insert {customer.Name}");
                 }
                 bool valueBoolReturn = returnDbChange > _codeReturnDatabase;
+                await this._rabbitMQClient.PublishAsync(customer.Name, "hello");
                 return valueBoolReturn;
 
             }

@@ -13,6 +13,7 @@ namespace Infrastructure.Resources.RabbitMq
         private readonly IConfiguration _configuration;
         private readonly IConnection _connection;
         private readonly IChannel _channel;
+        private static string _lastMessage = string.Empty;
 
         public RabbitMqSubscriber(IConfiguration configuration)
         {
@@ -32,11 +33,14 @@ namespace Infrastructure.Resources.RabbitMq
             {
                 byte[]? body = ea.Body.ToArray();
                 string? message = Encoding.UTF8.GetString(body);
+                _lastMessage = message;
                 return Task.CompletedTask;
             };
 
             await _channel.BasicConsumeAsync(queueName, autoAck: true, consumer);
         }
+
+        public string GetLastMessage() => _lastMessage;
 
         public async ValueTask DisposeAsync()
         {

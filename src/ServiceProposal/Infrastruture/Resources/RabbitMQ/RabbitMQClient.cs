@@ -19,7 +19,6 @@ namespace Infrastruture.Resources.RabbitMQ
         {
             _configuration = configuration;
             var factory = new ConnectionFactory() { HostName = _configuration["RabbitMqHost"], Port = int.Parse(_configuration["RabbitMqPort"]) };
-            // Cria conexão e canal de forma síncrona bloqueando (alternativa: usar AsyncFactoryMethod)
             _connection = factory.CreateConnectionAsync().GetAwaiter().GetResult();
             _channel = _connection.CreateChannelAsync().GetAwaiter().GetResult();
         }
@@ -34,10 +33,15 @@ namespace Infrastruture.Resources.RabbitMQ
 
             var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
 
+            var properties = new BasicProperties
+            {
+                DeliveryMode = DeliveryModes.Persistent // garante que a mensagem sobrevive restart do Rabbit
+            };
+
             await _channel.BasicPublishAsync(exchange: "",
                                              routingKey: queueName,
                                              mandatory: false,
-                                             basicProperties: new BasicProperties(),
+                                             basicProperties: properties,
                                              body: body);
 
             

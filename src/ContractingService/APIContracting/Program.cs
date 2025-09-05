@@ -30,6 +30,7 @@ builder.Services.AddScoped<IDeleteServiceContractingUseCase, DeleteServiceContra
 builder.Services.AddScoped<IReadServiceContractingUseCase, ReadServiceContractingUseCase>();
 builder.Services.AddHostedService<RabbitMqBackgroundConsumer>();
 builder.Services.AddSingleton<IRabbitMqSubscriber, RabbitMqSubscriber>();
+builder.Services.AddSingleton<IMessageStore, InMemoryMessageStore>();
 
 builder.Services.AddScoped<IProposalProcessorService, ProposalProcessorService>();
 builder.Services.AddHostedService<RabbitMqBackgroundConsumer>();

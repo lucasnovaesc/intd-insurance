@@ -12,16 +12,18 @@ namespace Infrastructure.Resources.RabbitMq
     {
         private readonly IRabbitMqSubscriber _consumer;
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IMessageStore _messageStore;
 
-        public RabbitMqBackgroundConsumer(IRabbitMqSubscriber consumer, IServiceScopeFactory serviceScopeFactory)
+        public RabbitMqBackgroundConsumer(IRabbitMqSubscriber consumer, IServiceScopeFactory serviceScopeFactory, IMessageStore messageStore)
         {
             _consumer = consumer;
             this._serviceScopeFactory = serviceScopeFactory;
+            _messageStore = messageStore;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            await _consumer.StartConsumingAsync("proposal-queue", async message =>
+            await _consumer.StartConsumingAsync("hello", async message =>
             {
                 using var scope = _serviceScopeFactory.CreateScope();
                 var processor = scope.ServiceProvider.GetRequiredService<IProposalProcessorService>();
@@ -30,6 +32,9 @@ namespace Infrastructure.Resources.RabbitMq
                 if (proposal != null)
                 {
                     await processor.ProcessMessageAsync(proposal);
+
+                    // guarda a última mensagem recebida
+                    _messageStore.SetLastMessage(proposal);
                 }
             });
 

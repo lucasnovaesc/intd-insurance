@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Infrastructure.Resources.RabbitMq;
+using Infrastructure.Resources.RabbitMq.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Service.DataTransferObjects.ServiceContractingDTO.Request;
 using Service.DataTransferObjects.ServiceContractingDTO.Response;
+using Service.UseCases.ProposalUseCase.Interfaces;
 using Service.UseCases.ServiceContractingUseCase.Interfaces;
 
 namespace APIContracting.Controller
@@ -13,14 +16,20 @@ namespace APIContracting.Controller
         private readonly IUpdateServiceContractingUseCase _updateServiceContractingUseCase;
         private readonly IDeleteServiceContractingUseCase _deleteServiceContractingUseCase;
         private readonly IReadServiceContractingUseCase _readServiceContractingUseCase;
+        private readonly IProposalProcessorService _proposalProcessorService;
+        private readonly IMessageStore messageStore;
+        private readonly IRabbitMqSubscriber _rabbitMqSubscriber;
 
         public ServiceContractingController(IInsertServiceContractingUseCase insertServiceContractingUseCase, IUpdateServiceContractingUseCase updateServiceContractingUseCase,
-                                            IDeleteServiceContractingUseCase deleteServiceContractingUseCase, IReadServiceContractingUseCase readServiceContractingUseCase)
+                                            IDeleteServiceContractingUseCase deleteServiceContractingUseCase, IReadServiceContractingUseCase readServiceContractingUseCase, IProposalProcessorService proposalProcessorService, IMessageStore messageStore, IRabbitMqSubscriber rabbitMqSubscriber)
         {
             this._insertServiceContractingUseCase = insertServiceContractingUseCase;
             this._updateServiceContractingUseCase = updateServiceContractingUseCase;
             this._deleteServiceContractingUseCase = deleteServiceContractingUseCase;
             this._readServiceContractingUseCase = readServiceContractingUseCase;
+            this._proposalProcessorService = proposalProcessorService;
+            this.messageStore = messageStore;
+            _rabbitMqSubscriber = rabbitMqSubscriber;
         }
 
         [HttpGet]
@@ -28,14 +37,20 @@ namespace APIContracting.Controller
         {
             try
             {
-                List<ResponseReadServiceContractingDTO> returnReadServiceContractingList = await this._readServiceContractingUseCase.FindAll();
-
-                if (returnReadServiceContractingList == null)
+                //List<ResponseReadServiceContractingDTO> returnReadServiceContractingList = await this._readServiceContractingUseCase.FindAll();
+                //string teste = await this._proposalProcessorService.ProcessMessageAsync("teste");
+                string? lastMessage = _rabbitMqSubscriber.GetLastMessage();
+                return Ok(new
                 {
-                    return BadRequest("Failed to Find Service Contracting.");
-                }
+                    Data = "teste",
+                    LastRabbitMessage = lastMessage ?? "Nenhuma mensagem recebida ainda"
+                });
+                //if (returnReadServiceContractingList == null)
+                //{
+                //    return BadRequest("Failed to Find Service Contracting.");
+                //}
 
-                return Ok(returnReadServiceContractingList);
+                //return Ok(returnReadServiceContractingList);
             }
             catch (Exception ex)
             {
