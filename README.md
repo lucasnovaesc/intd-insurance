@@ -74,13 +74,3 @@ dotnet test
 | |
 v v
 PostgreSQL (db=intd, schemas: proposta, contratacao)
-```
-
-
----
-
-
-## Observações finais
-- Para gerar **migrations**: `dotnet ef migrations add Initial --project src/PropostaService/Infrastructure --startup-project src/PropostaService/Api` (análogo para ContratacaoService).
-- Em produção, separar DBs fisicamente é recomendável; aqui mantemos 1 instância para simplificar.
-- Trocar HTTP por **filas** é simples: crie um `IPropostaStatusChecker` adapter via mensageria.
