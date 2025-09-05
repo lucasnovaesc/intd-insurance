@@ -2,6 +2,7 @@
 
 using Domain.Entities;
 using Domain.Entities.Enuns;
+using Domain.Exceptions;
 
 namespace Domain.Factories
 {
@@ -21,9 +22,10 @@ namespace Domain.Factories
         public Proposal MakeExistent(Guid proposalId, long proposalNumber, Guid productId, Guid customerId, DateTime dateCreation, string proposalStatusId)
         {
             DateTime dateModification = DateTime.Now;
-            Enum.TryParse(proposalStatusId, out ProposalStatusEnum proposalStatusEnumId);
+            if (!Enum.TryParse(proposalStatusId, true, out ProposalStatusEnum parsedStatus))
+                throw new EntityPropertyIncorrect($"Invalid ProposalStatus: {proposalStatusId}");
 
-            Proposal existentProposal = new Proposal(proposalId, proposalNumber, productId, customerId, dateCreation, dateModification, proposalStatusEnumId);
+            Proposal existentProposal = new Proposal(proposalId, proposalNumber, productId, customerId, dateCreation, dateModification, parsedStatus);
 
             return existentProposal;
 
