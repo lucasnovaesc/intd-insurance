@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: serviceproposal
+    ports:
+      - "5432:5432"
+    networks:
+      - contracting-proposal
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-service
+    hostname: rabbitmq-service
+    ports:
+      - "5672:5672"    # para conexões do RabbitMQ
+      - "15672:15672"  # interface web
+    networks:
+      - contracting-proposal
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+  service-proposal:
+    image: serviceproposal:1.0
+    container_name: service-proposal
+    ports:
+      - "8080:8080"
+    networks:
+      - contracting-proposal
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  service-contracting:
+    image: servicecontracting:1.0
+    container_name: service-contracting
+    ports:
+      - "8081:8080"
+    networks:
+      - contracting-proposal
+    depends_on:
+      - postgres
+      - rabbitmq
+      - service-proposal
+
+networks:
+  contracting-proposal:
+    external: true   # usar a rede que você já criou
+
+volumes:
+  postgres-data:
+  rabbitmq-data:
