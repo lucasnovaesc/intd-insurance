@@ -73,4 +73,4 @@ dotnet test
 +---------+---------+ +-----------+------------+
 | |
 v v
-PostgreSQL (db=intd, schemas: proposta, contratacao)
+PostgreSQL (db=serviceproposal, schemas: proposta, contratacao)
