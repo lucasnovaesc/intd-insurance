@@ -2,14 +2,14 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ./src/ContractingService/APIContracting/APIContracting.csproj ./APIContracting/
-COPY ./src/ContractingService/Service/Service.csproj ./Service/
-COPY ./src/ContractingService/Domain/Domain.csproj ./Domain/
-COPY ./src/ContractingService/Infrastructure/Infrastructure.csproj ./Infrastructure/
+COPY ./APIContracting/APIContracting.csproj ./APIContracting/
+COPY ./Service/Service.csproj ./Service/
+COPY ./Domain/Domain.csproj ./Domain/
+COPY ./Infrastructure/Infrastructure.csproj ./Infrastructure/
 
 RUN dotnet restore ./APIContracting/APIContracting.csproj
 
-COPY ./src/ContractingService/ .
+COPY . .
 
 RUN dotnet publish ./APIContracting -c Release -o /app/publish
 

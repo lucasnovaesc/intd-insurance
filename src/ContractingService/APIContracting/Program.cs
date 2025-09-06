@@ -50,6 +50,12 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IProposalProcessorService, ProposalProcessorService>();
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ServiceContractingContext>();
+    db.Database.Migrate(); // aplica migrations automaticamente
+}
+
 // Ativa middleware do Swagger s� no Development
 
 app.UseSwagger();
