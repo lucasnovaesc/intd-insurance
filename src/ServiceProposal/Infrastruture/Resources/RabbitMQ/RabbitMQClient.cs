@@ -37,7 +37,7 @@ namespace Infrastruture.Resources.RabbitMQ
             {
                 DeliveryMode = DeliveryModes.Persistent // garante que a mensagem sobrevive restart do Rabbit
             };
-
+            Console.WriteLine($"Publicando mensagem na fila {queueName}: {JsonSerializer.Serialize(message)}");
             await _channel.BasicPublishAsync(exchange: "",
                                              routingKey: queueName,
                                              mandatory: false,

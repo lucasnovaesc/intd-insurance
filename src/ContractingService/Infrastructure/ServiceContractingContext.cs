@@ -32,5 +32,6 @@ namespace Infrastructure
         }
 
         public DbSet<ServiceContracting> ServiceContractings { get; set; }
+        public DbSet<Proposal> Proposals { get; set; }
     }
 }

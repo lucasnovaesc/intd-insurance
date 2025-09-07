@@ -23,18 +23,6 @@ namespace Infrastruture
             string connectionString = configuration.GetConnectionString("ServiceProposalDb");
 
             optionsBuilder.UseNpgsql(connectionString);
-            // Carrega appsettings.json
-            //IConfigurationRoot configuration = new ConfigurationBuilder()
-            //    .SetBasePath(Directory.GetCurrentDirectory()) // pega caminho do projeto de inicialização
-            //    .AddJsonFile("appsettings.json")
-            //    .Build();
-
-            //var connectionString = configuration.GetConnectionString("DefaultConnection");
-
-            //var optionsBuilder = new DbContextOptionsBuilder<ServiceProposalContext>();
-            //optionsBuilder.UseNpgsql(connectionString);
-
-            //return new ServiceProposalContext(optionsBuilder.Options);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

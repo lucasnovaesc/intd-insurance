@@ -25,16 +25,20 @@ namespace Infrastructure.Resources.RabbitMq
 
         public async Task StartConsumingAsync(string queueName, Func<string, Task> onMessageReceived)
         {
+
             await _channel.QueueDeclareAsync(queueName, true, false, false, null);
 
             var consumer = new AsyncEventingBasicConsumer(_channel);
 
-            consumer.ReceivedAsync += (object model, BasicDeliverEventArgs ea) =>
+            consumer.ReceivedAsync += async (object model, BasicDeliverEventArgs ea) =>
             {
-                byte[]? body = ea.Body.ToArray();
-                string? message = Encoding.UTF8.GetString(body);
+                byte[] body = ea.Body.ToArray();
+                string message = Encoding.UTF8.GetString(body);
                 _lastMessage = message;
-                return Task.CompletedTask;
+
+                Console.WriteLine($"Mensagem recebida no subscriber: {message}");
+                if (onMessageReceived != null)
+                    await onMessageReceived(message);
             };
 
             await _channel.BasicConsumeAsync(queueName, autoAck: true, consumer);

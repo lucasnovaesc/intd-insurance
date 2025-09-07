@@ -47,8 +47,10 @@ services:
     networks:
       - contracting-proposal
     depends_on:
-      - postgres
-      - rabbitmq-service
+      postgres:
+        condition: service_healthy
+      rabbitmq-service:
+        condition: service_healthy
 
   service-contracting:
     build:

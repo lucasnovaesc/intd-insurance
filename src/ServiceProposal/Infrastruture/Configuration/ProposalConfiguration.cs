@@ -1,6 +1,7 @@
 ﻿
 
 using Domain.Entities;
+using Domain.Entities.Enuns;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -39,6 +40,9 @@ namespace Infrastruture.Configuration
                 .WithMany()
                 .HasForeignKey(c => c.ProposalStatusId)
                 .IsRequired();
+
+            builder.HasData(
+                new Proposal(new Guid("cd8b89cc-92b3-4a3b-9fe4-ef2f819c9a1d"), 1, new Guid("50beec7c-b8f6-4edb-9730-6517fdf64b2f"), new Guid("690c6507-1c3b-4e84-a77e-8779fbba038d"), DateTime.Parse("2025-10-01T14:30:00"), DateTime.Parse("2025-10-01T14:30:00"), ProposalStatusEnum.Analysing));
         }
     }
 }

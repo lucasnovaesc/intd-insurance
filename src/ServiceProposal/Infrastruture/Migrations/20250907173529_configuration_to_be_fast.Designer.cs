@@ -3,6 +3,7 @@ using System;
 using Infrastruture;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastruture.Migrations
 {
     [DbContext(typeof(ServiceProposalContext))]
-    partial class ServiceProposalContextModelSnapshot : ModelSnapshot
+    [Migration("20250907173529_configuration_to_be_fast")]
+    partial class configuration_to_be_fast
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
