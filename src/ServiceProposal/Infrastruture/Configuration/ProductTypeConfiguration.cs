@@ -29,6 +29,9 @@ namespace Infrastruture.Configuration
             builder.Property(c => c.DateModification)
                 .IsRequired()
                 .HasColumnType("timestamp without time zone");
+
+            builder.HasData(
+                new ProductType(new Guid("0fa7d783-e5b6-4317-ae7e-e932d1a8d92b"), "seguro de vida", "seguro de via cobertura media",DateTime.Parse("2025-10-01T14:30:00"), DateTime.Parse("2025-10-01T14:30:00")));
         }
     }
 }

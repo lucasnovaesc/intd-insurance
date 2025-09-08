@@ -1,4 +1,3 @@
-version: '3.9'
 
 services:
   postgres:
@@ -14,8 +13,13 @@ services:
       - contracting-proposal
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  rabbitmq:
+  rabbitmq-service:
     image: rabbitmq:3-management
     container_name: rabbitmq-service
     hostname: rabbitmq-service
@@ -26,33 +30,48 @@ services:
       - contracting-proposal
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   service-proposal:
-    image: serviceproposal:1.0
+    build:
+        context: ./src/ServiceProposal  # pasta onde está o Dockerfile
+        dockerfile: DockerFile
+    image: service-proposal:1.2
     container_name: service-proposal
     ports:
       - "8080:8080"
     networks:
       - contracting-proposal
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      rabbitmq-service:
+        condition: service_healthy
 
   service-contracting:
-    image: servicecontracting:1.0
+    build:
+      context: ./src/ContractingService  # pasta onde está o Dockerfile
+      dockerfile: DockerFile
+    image: service-contracting:1.7
     container_name: service-contracting
     ports:
       - "8081:8080"
     networks:
       - contracting-proposal
     depends_on:
-      - postgres
-      - rabbitmq
-      - service-proposal
+      postgres:
+        condition: service_healthy
+      rabbitmq-service:
+        condition: service_healthy
+      service-proposal:
+        condition: service_started
 
 networks:
   contracting-proposal:
-    external: true   # usar a rede que você já criou
 
 volumes:
   postgres-data:

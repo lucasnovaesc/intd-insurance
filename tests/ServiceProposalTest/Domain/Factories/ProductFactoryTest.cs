@@ -73,9 +73,9 @@ namespace ServiceProposalTest.Domain.Factories
             }
 
             [Theory]
-            [InlineData(0)]        
-            [InlineData(-10)]      
-            [InlineData(1000001)]  
+            [InlineData(0)]
+            [InlineData(-10)]
+            [InlineData(1000001)]
             public void MakeNew_ShouldThrow_WhenPriceIsOutOfRange(decimal invalidPrice)
             {
                 var name = "Produto inválido";
@@ -122,4 +122,5 @@ namespace ServiceProposalTest.Domain.Factories
                 );
             }
         }
+    }
 }

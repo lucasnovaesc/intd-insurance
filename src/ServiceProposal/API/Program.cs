@@ -27,11 +27,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 builder.Services.AddDbContext<ServiceProposalContext>();
 
-//var connectionString = builder.Configuration.GetConnectionString("ServiceProposalDb");
 
-//// Injetar DbContext
-//builder.Services.AddDbContext<ServiceProposalContext>(options =>
-//    options.UseNpgsql(connectionString));
 //product Dependence Injection
 builder.Services.AddSingleton<IRabbitMQClient, RabbitMQClient>();
 builder.Services.AddScoped<ProductFactory>();

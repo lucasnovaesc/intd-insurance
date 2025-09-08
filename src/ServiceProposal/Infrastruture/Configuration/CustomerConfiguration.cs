@@ -1,6 +1,7 @@
 ﻿
 
 using Domain.Entities;
+using Domain.Entities.Enuns;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -36,6 +37,9 @@ namespace Infrastruture.Configuration
             builder.Property(c => c.DateModification)
                 .IsRequired()
                 .HasColumnType("timestamp without time zone");
+
+            builder.HasData(
+                new Customer(new Guid("690c6507-1c3b-4e84-a77e-8779fbba038d"), "gustavo", "gustavo@gmail.com", "12312312312", "rua", DateTime.Parse("2025-10-01T14:30:00"), DateTime.Parse("2025-10-01T14:30:00")));
         }
     }
 }

@@ -12,6 +12,7 @@ using Service.UseCases.ServiceContractingUseCase;
 using Service.UseCases.ServiceContractingUseCase.Interfaces;
 using System;
 using System.Text.Json.Serialization;
+using Infrastructure.PostgreRepositories.ProposalRepository;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -32,13 +33,15 @@ builder.Services.AddHostedService<RabbitMqBackgroundConsumer>();
 builder.Services.AddSingleton<IRabbitMqSubscriber, RabbitMqSubscriber>();
 builder.Services.AddSingleton<IMessageStore, InMemoryMessageStore>();
 
+builder.Services.AddScoped<ProposalFactory>();
+builder.Services.AddScoped<IProposalRepository, ProposalPostgreRepository>();
+builder.Services.AddScoped<IInsertProposalUseCase, InsertProposalUseCase>();
+builder.Services.AddScoped<IReadProposalUseCase, ReadProposalUseCase>();
+
+
 builder.Services.AddScoped<IProposalProcessorService, ProposalProcessorService>();
 builder.Services.AddHostedService<RabbitMqBackgroundConsumer>();
-//var connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
-
-//// Injetar DbContext
-//builder.Services.AddDbContext<ServiceContractingContext>(options =>
-//    options.UseNpgsql(connectionString));
+builder.Services.AddHostedService<ProposalApprovedConsumer>();
 
 // Adiciona servi�os do Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -49,6 +52,12 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddControllers();
 builder.Services.AddScoped<IProposalProcessorService, ProposalProcessorService>();
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ServiceContractingContext>();
+    db.Database.Migrate(); // aplica migrations automaticamente
+}
 
 // Ativa middleware do Swagger s� no Development
 

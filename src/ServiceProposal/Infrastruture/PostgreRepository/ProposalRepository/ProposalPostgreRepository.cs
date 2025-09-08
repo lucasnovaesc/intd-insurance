@@ -47,6 +47,9 @@ namespace Infrastruture.PostgreRepository.ProposalRepository
             try
             {
                 List<Proposal> proposalList = await this._serviceProposalContext.Proposals
+                    .Include(p => p.ProposalStatus)
+                    .Include(p => p.Customer)
+                    .Include(p => p.Product)
                     .ToListAsync();
                 return proposalList;
             }
@@ -62,6 +65,9 @@ namespace Infrastruture.PostgreRepository.ProposalRepository
             {
 
                 List<Proposal> proposals = await this._serviceProposalContext.Proposals
+                    .Include(p => p.ProposalStatus)
+                    .Include(p => p.Customer)
+                    .Include(p => p.Product)
                     .Where(c => c.CustomerId == customerId).ToListAsync();
                 return proposals;
             }
@@ -77,6 +83,9 @@ namespace Infrastruture.PostgreRepository.ProposalRepository
             {
 
                Proposal proposal = await this._serviceProposalContext.Proposals
+                    .Include(p => p.ProposalStatus)
+                    .Include(p => p.Customer)
+                    .Include(p => p.Product)
                     .FirstOrDefaultAsync(c => c.ProposalId == proposalId);
                 return proposal;
             }
@@ -92,6 +101,9 @@ namespace Infrastruture.PostgreRepository.ProposalRepository
             {
 
                 Proposal proposal = await this._serviceProposalContext.Proposals
+                    .Include(p => p.ProposalStatus)
+                    .Include(p => p.Customer)
+                    .Include(p => p.Product)
                      .FirstOrDefaultAsync(c => c.ProposalNumber == proposalNumber);
                 return proposal;
             }
