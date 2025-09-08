@@ -9,7 +9,7 @@
 
 ## Como subir em Docker
 ```bash
-docker compose up --build
+docker compose up --d
 ```
 - PropostaService: http://localhost:8080/swagger
 - ContratacaoService: http://localhost:8081/swagger
@@ -20,9 +20,22 @@ docker compose up --build
 
 ## Rotas
 ### PropostaService
-- `POST /propostas` cria proposta `{ clienteNome, produtoCodigo, premio }`
-- `GET /propostas` lista
-- `GET /propostas/{id}` busca
+- `Delete /productTypes/{id}` delete 
+- `POST /productTypes` create product Type `{ name, description }`
+- `GET /productTypes` list
+- `GET /productTypes/{id}` search
+- `PATCH /productTypes/{id}/` 
+### PropostaService
+- `Delete /products/{id}` delete 
+- `POST /products` create product `{ name, description, productPrice, productTypeId }`
+- `GET /products` list
+- `GET /products/{id}` search
+- `PATCH /products/{id}/` 
+### PropostaService
+- `Delete /propostas/{id}` delete 
+- `POST /propostas` create proposta `{ customerId, propoposalNumber, prooductId }`
+- `GET /propostas` list
+- `GET /propostas/{id}` search
 - `PATCH /propostas/{id}/status` body: `0|1|2` (EmAnalise|Aprovada|Rejeitada)
 
 
@@ -46,13 +59,11 @@ dotnet test
 
 
 ## Decisões
-- **DB único + schemas**: `proposta` e `contratacao` isolam tabelas por serviço.
 - **Comunicação**: REST simples (Contratacao chama Proposta para checar status).
 - **Auto-migrate**: simplifica o boot local.
 
 
 ## Próximos passos (bônus)
-- Mensageria (RabbitMQ) emitindo evento `PropostaAprovada` → `ContratacaoService` consome e pré-cria rascunhos.
 - Autenticação (JWT) e observabilidade (Serilog + OpenTelemetry).
 ```
 
