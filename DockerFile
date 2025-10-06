@@ -1,0 +1,24 @@
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copiar apenas os csproj para restaurar pacotes
+COPY ./API/API.csproj ./API/
+COPY ./Service/Service.csproj ./Service/
+COPY ./Domain/Domain.csproj ./Domain/
+COPY ./Infrastruture/Infrastruture.csproj ./Infrastruture/
+
+# Restaurar pacotes
+RUN dotnet restore ./API/API.csproj
+
+# Copiar todo o código
+COPY . .
+
+# Publicar a aplicação
+RUN dotnet publish ./API -c Release -o /app/publish
+
+# Runtime stage
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "API.dll"]

@@ -42,10 +42,15 @@ namespace Infrastructure.Resources.RabbitMq
 
                         if (proposalDTO != null)
                         {
-                            Proposal proposal = new Proposal (new Guid(proposalDTO.ProposalId), proposalDTO.ProposalNumber,
-                                new Guid(proposalDTO.CustomerId), new Guid(proposalDTO.ProductId), proposalDTO.DateCreation,
-                                proposalDTO.DateModification);
-                            
+                            Proposal proposal = new Proposal(
+                                new Guid(proposalDTO.ProposalId),
+                                proposalDTO.ProposalNumber,
+                                new Guid(proposalDTO.CustomerId),
+                                new Guid(proposalDTO.ProductId),
+                                proposalDTO.DateCreation,
+                                proposalDTO.DateModification
+                            );
+
                             Console.WriteLine($"Proposta desserializada: {proposal.ProposalNumber}, {proposal.ProductId}");
                             await repository.Insert(proposal);
                         }
@@ -60,12 +65,17 @@ namespace Infrastructure.Resources.RabbitMq
                     }
                 });
 
-                await Task.Delay(-1, stoppingToken);
+                await Task.Delay(Timeout.Infinite, stoppingToken);
+            }
+            catch (TaskCanceledException)
+            {
+                Console.WriteLine("Consumer encerrado com cancelamento (parada do container).");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Erro no consumer: {ex}");
             }
         }
+
     }
 }

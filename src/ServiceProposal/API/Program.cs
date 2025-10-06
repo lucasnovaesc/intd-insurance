@@ -29,7 +29,7 @@ builder.Services.AddDbContext<ServiceProposalContext>();
 
 
 //product Dependence Injection
-builder.Services.AddSingleton<IRabbitMQClient, RabbitMQClient>();
+builder.Services.AddSingleton<IRabbitMQClient, ReliableRabbitMqClient>();
 builder.Services.AddScoped<ProductFactory>();
 builder.Services.AddScoped<IProductRepository, ProductPostgreRepository>();
 builder.Services.AddScoped<IInsertProductUseCase, InsertProductUseCase>();

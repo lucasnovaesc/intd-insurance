@@ -13,6 +13,8 @@ using Service.UseCases.ServiceContractingUseCase.Interfaces;
 using System;
 using System.Text.Json.Serialization;
 using Infrastructure.PostgreRepositories.ProposalRepository;
+using Polly;
+using Polly.Retry;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
