@@ -1,0 +1,19 @@
+# build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY ./APIContracting/APIContracting.csproj ./APIContracting/
+COPY ./Service/Service.csproj ./Service/
+COPY ./Domain/Domain.csproj ./Domain/
+COPY ./Infrastructure/Infrastructure.csproj ./Infrastructure/
+
+RUN dotnet restore ./APIContracting/APIContracting.csproj
+
+COPY . .
+
+RUN dotnet publish ./APIContracting -c Release -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "APIContracting.dll"]

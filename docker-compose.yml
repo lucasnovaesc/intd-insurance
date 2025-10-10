@@ -1,0 +1,79 @@
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: serviceproposal
+    ports:
+      - "5432:5432"
+    networks:
+      - contracting-proposal
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq-service:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-service
+    hostname: rabbitmq-service
+    ports:
+      - "5672:5672"    # para conexões do RabbitMQ
+      - "15672:15672"  # interface web
+    networks:
+      - contracting-proposal
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  service-proposal:
+    build:
+        context: ./src/ServiceProposal  # pasta onde está o Dockerfile [so no produtor, consumer não precisa]
+        dockerfile: DockerFile
+    image: service-proposal:1.2
+    container_name: service-proposal
+    ports:
+      - "8080:8080"
+    networks:
+      - contracting-proposal
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq-service:
+        condition: service_healthy
+
+  service-contracting:
+    build:
+      context: ./src/ContractingService  # pasta onde está o Dockerfile
+      dockerfile: DockerFile
+    image: service-contracting:1.7
+    container_name: service-contracting
+    ports:
+      - "8081:8080"
+    networks:
+      - contracting-proposal
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq-service:
+        condition: service_healthy
+      service-proposal:
+        condition: service_started
+
+networks:
+  contracting-proposal:
+    driver: bridge  
+
+volumes:
+  postgres-data:
+  rabbitmq-data:
